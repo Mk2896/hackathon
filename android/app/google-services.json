@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1019418767974",
+    "project_id": "hackatron-project",
+    "storage_bucket": "hackatron-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019418767974:android:eee0f67e98488ae1f273a7",
+        "android_client_info": {
+          "package_name": "com.example.hackatron"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019418767974-cr56bl22h1c9g7qe3l9jmvrda7pih0bl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoGmSENqAt93IDscBLiaX9pmj2ACKHXJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019418767974-cr56bl22h1c9g7qe3l9jmvrda7pih0bl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
