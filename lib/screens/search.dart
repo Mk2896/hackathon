@@ -154,7 +154,7 @@ class _SearchState extends State<Search> {
                                       .map((DocumentSnapshot document) {
                                     Products product =
                                         document.data()! as Products;
-                                    return Product(product, document.id);
+                                    return Product(product, document.id,(){});
                                   }).toList(),
                                 ),
                               ),

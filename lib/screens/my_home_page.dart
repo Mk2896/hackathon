@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackatron/global_constants.dart';
 import 'package:hackatron/widgets/cart_screen.dart';
 import 'package:hackatron/widgets/home_page_screen.dart';
+import 'package:hackatron/widgets/wishlist.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> homeScreens = [
     const HomePageScreen(),
     const CartScreen(),
-    const HomePageScreen(),
+    const Wishlist(),
     const CartScreen(),
   ];
 
@@ -65,14 +66,14 @@ class _MyHomePageState extends State<MyHomePage> {
               label: "Cart"),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.settings_outlined,
+                Icons.favorite_border,
                 size: 30,
               ),
               activeIcon: Icon(
-                Icons.settings_outlined,
+                Icons.favorite_border,
                 size: 35,
               ),
-              label: "Settings"),
+              label: "Wishlist"),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.add,

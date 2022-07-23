@@ -14,10 +14,16 @@ import 'package:hackatron/widgets/loading.dart';
 import 'package:hackatron/widgets/profile_icon.dart';
 
 class Product extends StatefulWidget {
-  const Product(this.product, this.productId, {Key? key}) : super(key: key);
+  const Product(
+    this.product,
+    this.productId,
+    this.wishlistHook, {
+    Key? key,
+  }) : super(key: key);
 
   final Products product;
   final String productId;
+  final void Function() wishlistHook;
 
   @override
   State<Product> createState() => _ProductState();
@@ -44,8 +50,9 @@ class _ProductState extends State<Product> {
 
   void openProduct(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) =>
-          loaderOverlay(child: ProdutcDetail(product: widget.product, productId: widget.productId)),
+      builder: (context) => loaderOverlay(
+          child: ProdutcDetail(
+              product: widget.product, productId: widget.productId)),
     ));
   }
 
@@ -86,6 +93,8 @@ class _ProductState extends State<Product> {
       {"wishlistCount": wishlistCount},
       SetOptions(merge: true),
     );
+
+    widget.wishlistHook();
 
     setState(() {
       isMyWishlistProduct = !isMyWishlistProduct;

@@ -9,6 +9,7 @@ import 'package:hackatron/global_constants.dart';
 import 'package:hackatron/models/cart.dart';
 import 'package:hackatron/models/products.dart';
 import 'package:hackatron/models/users.dart';
+import 'package:hackatron/widgets/color_widget.dart';
 import 'package:hackatron/widgets/custom_button.dart';
 import 'package:hackatron/widgets/custom_text.dart';
 import 'package:hackatron/widgets/favorite_btn.dart';
@@ -37,7 +38,10 @@ class _ProdutcDetailState extends State<ProdutcDetail>
   late CollectionReference? cartRef;
   late User currentUser;
   late int wishlistCount;
+  final List<Widget> colorWidgets = [];
+  final List<bool> colorBool = [];
   bool isMyWishlistProduct = false;
+  String quantity = "1";
 
   @override
   void initState() {
@@ -56,6 +60,13 @@ class _ProdutcDetailState extends State<ProdutcDetail>
               toFirestore: (cart, _) => cart.toJson(),
             );
     isMyWishlist();
+
+    int i = 0;
+    for (var code in widget.product.colorCodes) {
+      i == 0 ? colorBool.add(true) : colorBool.add(false);
+      i++;
+      colorWidgets.add(ColorWidget(color: Color(code)));
+    }
   }
 
   @override
@@ -361,8 +372,85 @@ class _ProdutcDetailState extends State<ProdutcDetail>
                                     ],
                                   ),
                                 ),
-                                Row(
-                                  children: [],
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      const CustomText(
+                                        text: "Color:",
+                                        textColor: Color(primaryFontColor),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      ToggleButtons(
+                                          renderBorder: false,
+                                          fillColor: Colors.transparent,
+                                          onPressed: (int index) {
+                                            setState(() {
+                                              for (int indexBtn = 0;
+                                                  indexBtn < colorBool.length;
+                                                  indexBtn++) {
+                                                if (indexBtn == index) {
+                                                  colorBool[indexBtn] = true;
+                                                } else {
+                                                  colorBool[indexBtn] = false;
+                                                }
+                                              }
+                                            });
+                                          },
+                                          isSelected: colorBool,
+                                          children: colorWidgets),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.3,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        decoration: BoxDecoration(
+                                          color: const Color(bgColor),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: DropdownButton(
+                                            icon: const Icon(Icons
+                                                .keyboard_arrow_down_rounded),
+                                            isExpanded: true,
+                                            value: quantity,
+                                            items: const [
+                                              DropdownMenuItem(
+                                                value: "1",
+                                                child: Text("1"),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: "2",
+                                                child: Text("2"),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: "3",
+                                                child: Text("3"),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: "4",
+                                                child: Text("4"),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: "5",
+                                                child: Text("5"),
+                                              ),
+                                            ],
+                                            onChanged: (value) {
+                                              quantity = value.toString();
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
