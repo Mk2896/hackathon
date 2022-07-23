@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,8 @@ import 'package:hackatron/models/products.dart';
 import 'package:hackatron/models/users.dart';
 import 'package:hackatron/screens/product_detail.dart';
 import 'package:hackatron/widgets/custom_text.dart';
+import 'package:hackatron/widgets/favorite_btn.dart';
+import 'package:hackatron/widgets/loader_overlay.dart';
 import 'package:hackatron/widgets/loading.dart';
 import 'package:hackatron/widgets/profile_icon.dart';
 
@@ -40,7 +44,8 @@ class _ProductState extends State<Product> {
 
   void openProduct(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ProdutcDetail(product: widget.product),
+      builder: (context) =>
+          loaderOverlay(child: ProdutcDetail(product: widget.product, productId: widget.productId)),
     ));
   }
 
@@ -55,15 +60,23 @@ class _ProductState extends State<Product> {
 
   Future<void> updateWishlist() async {
     Users data = (await userRef.doc(currentUserId).get()).data() as Users;
+    List? wishlist;
     if (isMyWishlistProduct) {
-      data.wishlist!.remove(widget.productId);
+      data.wishlist?.remove(widget.productId);
+      wishlist = data.wishlist;
       wishlistCount -= 1;
     } else {
-      data.wishlist!.add(widget.productId);
+      if (data.wishlist != null) {
+        data.wishlist?.add(widget.productId);
+        wishlist = data.wishlist;
+      } else {
+        wishlist = [widget.productId];
+      }
       wishlistCount += 1;
     }
+
     await FirebaseFirestore.instance.collection("users").doc(currentUserId).set(
-      {"wishlist": data.wishlist},
+      {"wishlist": wishlist},
       SetOptions(merge: true),
     );
     await FirebaseFirestore.instance
@@ -73,6 +86,7 @@ class _ProductState extends State<Product> {
       {"wishlistCount": wishlistCount},
       SetOptions(merge: true),
     );
+
     setState(() {
       isMyWishlistProduct = !isMyWishlistProduct;
     });
@@ -115,15 +129,10 @@ class _ProductState extends State<Product> {
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                         ),
-                        IconButton(
-                          onPressed: () => updateWishlist(),
-                          icon: Icon(
-                            isMyWishlistProduct
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: const Color(primaryColor),
-                          ),
-                        )
+                        FavoriteButton(
+                          isMyWishlistProduct: isMyWishlistProduct,
+                          updateWishlist: updateWishlist,
+                        ),
                       ],
                     ),
                     GestureDetector(

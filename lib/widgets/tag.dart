@@ -3,10 +3,13 @@ import 'package:hackatron/global_constants.dart';
 import 'package:hackatron/screens/search.dart';
 import 'package:hackatron/widgets/custom_text.dart';
 import 'package:hackatron/widgets/extensions.dart';
+import 'package:hackatron/widgets/loader_overlay.dart';
 
-Widget tagWidget(String text,BuildContext context) {
+Widget tagWidget(String text, BuildContext context) {
   return GestureDetector(
-    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Search(searchKeyword: text),)),
+    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => loaderOverlay(child: Search(searchKeyword: text)),
+    )),
     child: Row(
       children: [
         const Padding(

@@ -1,3 +1,5 @@
+import 'package:hackatron/models/cart.dart';
+
 class Users {
   const Users({
     required this.name,
@@ -5,6 +7,7 @@ class Users {
     this.profession,
     required this.photoURL,
     this.wishlist,
+    this.cart,
   });
 
   Users.fromJson(Map<String, Object?> json)
@@ -13,7 +16,8 @@ class Users {
           email: json['email']! as String,
           photoURL: json['photoURL']! as String,
           profession: json['profession'] as String?,
-          wishlist: json['wishlist'] as List<dynamic>,
+          wishlist: json['wishlist'] as List<dynamic>?,
+          cart: json['cart'] as List<Cart>?,
         );
 
   final String name;
@@ -21,6 +25,7 @@ class Users {
   final String photoURL;
   final String? profession;
   final List<dynamic>? wishlist;
+  final List<Cart>? cart;
 
   Map<String, Object?> toJson() {
     return {
@@ -29,6 +34,7 @@ class Users {
       'photoURL': photoURL,
       'profession': profession,
       "wishlist": wishlist,
+      "cart": cart,
     };
   }
 }

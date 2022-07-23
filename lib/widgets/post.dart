@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,21 +8,25 @@ import 'package:hackatron/models/products.dart';
 import 'package:hackatron/models/users.dart';
 import 'package:hackatron/screens/product_detail.dart';
 import 'package:hackatron/widgets/custom_text.dart';
+import 'package:hackatron/widgets/loader_overlay.dart';
 import 'package:hackatron/widgets/loading.dart';
 import 'package:hackatron/widgets/profile_icon.dart';
 import 'package:hackatron/widgets/tag.dart';
 import 'package:hackatron/widgets/extensions.dart';
 
 class Post extends StatelessWidget {
-  const Post(this.product, {Key? key}) : super(key: key);
+  const Post(this.product, this.productId, {Key? key}) : super(key: key);
 
   final Products product;
+  final String productId;
 
-  void openProduct(BuildContext context)
-  {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProdutcDetail(product: product),));
+  void openProduct(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) =>
+          loaderOverlay(child: ProdutcDetail(product: product, productId: productId)),
+    ));
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

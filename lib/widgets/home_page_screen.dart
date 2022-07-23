@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackatron/global_constants.dart';
@@ -8,7 +6,7 @@ import 'package:hackatron/models/tags.dart';
 import 'package:hackatron/screens/search.dart';
 import 'package:hackatron/widgets/custom_refresh_indeicator.dart';
 import 'package:hackatron/widgets/custom_text.dart';
-import 'package:hackatron/widgets/custom_text_field.dart';
+import 'package:hackatron/widgets/loader_overlay.dart';
 import 'package:hackatron/widgets/logout.dart';
 import 'package:hackatron/widgets/post.dart';
 import 'package:hackatron/widgets/profile_icon.dart';
@@ -75,8 +73,10 @@ class _HomePageScreenState extends State<HomePageScreen>
   void _search() {
     if (_searchController.text.length > 1) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => Search(
-          searchKeyword: _searchController.text,
+        builder: (context) => loaderOverlay(
+          child: Search(
+            searchKeyword: _searchController.text,
+          ),
         ),
       ));
     }
@@ -169,7 +169,7 @@ class _HomePageScreenState extends State<HomePageScreen>
                               children: snapshot.data!.docs
                                   .map((DocumentSnapshot document) {
                                 Products product = document.data()! as Products;
-                                return Post(product);
+                                return Post(product,document.id);
                               }).toList(),
                             );
                           } else {
@@ -211,7 +211,7 @@ class _HomePageScreenState extends State<HomePageScreen>
                             children: snapshot.data!.docs
                                 .map((DocumentSnapshot document) {
                               Products product = document.data()! as Products;
-                              return Post(product);
+                              return Post(product,document.id);
                             }).toList(),
                           );
                         } else {
@@ -242,7 +242,7 @@ class _HomePageScreenState extends State<HomePageScreen>
                             children: snapshot.data!.docs
                                 .map((DocumentSnapshot document) {
                               Products product = document.data()! as Products;
-                              return Post(product);
+                              return Post(product,document.id);
                             }).toList(),
                           );
                         } else {

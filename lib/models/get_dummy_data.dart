@@ -56,9 +56,10 @@ class GetDummyData {
 
   createUsers(File imagePath) async {
     try {
-      String name = getRandomString(length: 5);
+      String name = getRandomName();
+      String email = name.replaceAll(" ", "_");
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: "$name@test.com",
+        email: "$email@test.com",
         password: "123456",
       );
       String currentUserID = FirebaseAuth.instance.currentUser!.uid;
@@ -81,10 +82,11 @@ class GetDummyData {
                     Users.fromJson(snapshot.data()!),
                 toFirestore: (users, _) => users.toJson(),
               );
-          String profession = "${getRandomString(length: 5)} ${getRandomString(length: 5)}";
+          String profession =
+              "${getRandomString(length: 5)} ${getRandomString(length: 5)}";
           await userRef.doc(currentUserID).set(Users(
                 name: name,
-                email: "$name@test.com",
+                email: "$email@test.com",
                 photoURL: imageURL,
                 profession: profession,
               ));
@@ -124,6 +126,14 @@ class GetDummyData {
 
       List<String> tags = getTags();
 
+      List<int> clrCode = getColorCodes();
+
+      Map<dynamic, dynamic> meas = {
+        "W": Random().nextInt(100),
+        "L": Random().nextInt(100),
+        "B": Random().nextInt(100),
+      };
+
       try {
         DocumentReference<Products> newProduct = await productsRef.add(Products(
           name: name,
@@ -135,6 +145,10 @@ class GetDummyData {
           userId: userId,
           images: [],
           tags: tags,
+          colorCodes: clrCode,
+          materialDescription: description,
+          measurements: meas,
+          washInstruction: description,
         ));
 
         String productId = newProduct.id;
@@ -168,6 +182,10 @@ class GetDummyData {
               userId: userId,
               images: finalImages,
               tags: tags,
+              colorCodes: clrCode,
+              measurements: meas,
+              materialDescription: description,
+              washInstruction: description,
             ));
       } catch (e) {
         inspect(e);
@@ -218,6 +236,38 @@ class GetDummyData {
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
   final Random _rnd = Random();
 
+  List<String> randomNameStrings = [];
+  List<String> nameKeywords = [
+    "John",
+    "Sam",
+    "Saad",
+    "Ali",
+    "Qurban",
+    "Bilal",
+    "Shahzaib",
+    "Musab",
+    "Maaz",
+    "Robert"
+  ];
+  List<String> sirnameKeywords = [
+    "Doe",
+    "Khan",
+    "Qureshi",
+    "Ijaz",
+    "Javed",
+    "Baig"
+  ];
+
+  List<int> colorCodes = [
+    0XFFFE2550,
+    0XFFFFFFFF,
+    0XFFFF0000,
+    0XFF3A9B7A,
+    0XFF212224,
+    0XFF999999,
+    0XFFEEEEEE
+  ];
+
   String getRandomString({required int length, bool onlyAlphabets = false}) {
     final String c;
     if (onlyAlphabets) {
@@ -225,8 +275,8 @@ class GetDummyData {
     } else {
       c = _charsWithoutNumber;
     }
-    String str = String.fromCharCodes(Iterable.generate(
-        length, (_) => c.codeUnitAt(_rnd.nextInt(c.length))));
+    String str = String.fromCharCodes(
+        Iterable.generate(length, (_) => c.codeUnitAt(_rnd.nextInt(c.length))));
     while (randomStrings.contains(str)) {
       str = String.fromCharCodes(Iterable.generate(
           length, (_) => _chars.codeUnitAt(_rnd.nextInt(c.length))));
@@ -237,10 +287,41 @@ class GetDummyData {
   }
 
   String getDescription(int length) {
-    String finalString = "";
+    String finalString = "Description ";
     for (var i = 0; i <= length; i++) {
-      finalString += " ${getRandomString(length: 10,onlyAlphabets: true)}";
+      finalString += " ${getRandomString(length: 10, onlyAlphabets: true)}";
     }
     return finalString;
+  }
+
+  String getRandomName() {
+    String firstName = nameKeywords[Random().nextInt(nameKeywords.length)];
+    String lastName = sirnameKeywords[Random().nextInt(sirnameKeywords.length)];
+    while (randomNameStrings.contains("$firstName $lastName")) {
+      firstName = nameKeywords[Random().nextInt(nameKeywords.length)];
+      lastName = sirnameKeywords[Random().nextInt(sirnameKeywords.length)];
+    }
+
+    randomNameStrings.add("$firstName $lastName");
+    return "$firstName $lastName";
+  }
+
+  List<int> getColorCodes() {
+    int firstNum = Random().nextInt(colorCodes.length);
+    int secondNum = Random().nextInt(colorCodes.length);
+    while (secondNum == firstNum) {
+      secondNum = Random().nextInt(colorCodes.length);
+    }
+    int thirdNum = Random().nextInt(colorCodes.length);
+    while (thirdNum == firstNum || thirdNum == secondNum) {
+      thirdNum = Random().nextInt(colorCodes.length);
+    }
+
+    List<int> colorList = [];
+    colorList.add(colorCodes[firstNum]);
+    colorList.add(colorCodes[secondNum]);
+    colorList.add(colorCodes[thirdNum]);
+
+    return colorList;
   }
 }

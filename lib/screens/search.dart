@@ -6,6 +6,7 @@ import 'package:hackatron/global_constants.dart';
 import 'package:hackatron/models/products.dart';
 import 'package:hackatron/models/tags.dart';
 import 'package:hackatron/widgets/custom_text.dart';
+import 'package:hackatron/widgets/loader_overlay.dart';
 import 'package:hackatron/widgets/logout.dart';
 import 'package:hackatron/widgets/product.dart';
 import 'package:hackatron/widgets/profile_icon.dart';
@@ -30,8 +31,8 @@ class _SearchState extends State<Search> {
   void _search() {
     if (widget.searchController.text.length > 1) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            Search(searchKeyword: widget.searchController.text),
+        builder: (context) => loaderOverlay(
+            child: Search(searchKeyword: widget.searchController.text)),
       ));
     }
   }
@@ -70,7 +71,6 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    inspect("Rebuild");
     return Scaffold(
       body: SafeArea(
         child: Container(

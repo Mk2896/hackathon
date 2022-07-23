@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hackatron/global_constants.dart';
+import 'package:hackatron/models/cart.dart';
 import 'package:hackatron/widgets/custom_text.dart';
 
 class CartItems extends StatelessWidget {
-  const CartItems({Key? key}) : super(key: key);
+  const CartItems({Key? key, required this.item, required this.removeFromCart})
+      : super(key: key);
 
+  final Cart item;
+  final void Function(String) removeFromCart;
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.topRight, children: [
@@ -18,28 +22,28 @@ class CartItems extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Image(image: AssetImage("assets/images/product-1.png")),
+              Image(image: NetworkImage(item.photoURL)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   CustomText(
-                    text: "Hawaian Shirt",
-                    textColor: Color(primaryFontColor),
+                    text: item.name,
+                    textColor: const Color(primaryFontColor),
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                   CustomText(
-                    text: "Sandy Williams",
-                    textColor: Color(secondaryFontColor),
+                    text: item.userName,
+                    textColor: const Color(secondaryFontColor),
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                   ),
                 ],
               ),
-              const CustomText(
-                text: "\$ 25.99",
-                textColor: Color(primaryColor),
+              CustomText(
+                text: "\$ ${item.price}",
+                textColor: const Color(primaryColor),
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
@@ -47,13 +51,16 @@ class CartItems extends StatelessWidget {
           ),
         ),
       ),
-      const Positioned(
+      Positioned(
         top: 10,
         right: 25,
-        child: Icon(
-          Icons.close,
-          size: 20,
-          color: Color(secondaryFontColor),
+        child: IconButton(
+          onPressed: () => removeFromCart(item.productId),
+          icon: const Icon(
+            Icons.close,
+            size: 20,
+            color: Color(secondaryFontColor),
+          ),
         ),
       ),
     ]);
