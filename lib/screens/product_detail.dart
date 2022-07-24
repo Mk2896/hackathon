@@ -60,12 +60,38 @@ class _ProdutcDetailState extends State<ProdutcDetail>
               toFirestore: (cart, _) => cart.toJson(),
             );
     isMyWishlist();
+    updateColorWidgets();
+  }
 
-    int i = 0;
-    for (var code in widget.product.colorCodes) {
-      i == 0 ? colorBool.add(true) : colorBool.add(false);
-      i++;
-      colorWidgets.add(ColorWidget(color: Color(code)));
+  void updateColorWidgets() {
+    if (colorBool.isEmpty) {
+      int i = 0;
+      for (var code in widget.product.colorCodes) {
+        if (i == 0) {
+          colorBool.add(true);
+          colorWidgets.add(ColorWidget(
+            color: Color(code),
+            isSelected: true,
+          ));
+        } else {
+          colorBool.add(false);
+          colorWidgets.add(ColorWidget(
+            color: Color(code),
+            isSelected: false,
+          ));
+        }
+        i++;
+      }
+    } else {
+      colorWidgets.removeRange(0, colorWidgets.length);
+      int i = 0;
+      for (var code in widget.product.colorCodes) {
+        colorWidgets.add(ColorWidget(
+          color: Color(code),
+          isSelected: colorBool[i],
+        ));
+        i++;
+      }
     }
   }
 
@@ -399,6 +425,8 @@ class _ProdutcDetailState extends State<ProdutcDetail>
                                                   colorBool[indexBtn] = false;
                                                 }
                                               }
+
+                                              updateColorWidgets();
                                             });
                                           },
                                           isSelected: colorBool,

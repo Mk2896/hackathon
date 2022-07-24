@@ -1,21 +1,13 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackatron/global_constants.dart';
 import 'package:hackatron/models/products.dart';
-import 'package:hackatron/models/tags.dart';
 import 'package:hackatron/models/users.dart';
-import 'package:hackatron/screens/search.dart';
-import 'package:hackatron/widgets/custom_refresh_indeicator.dart';
 import 'package:hackatron/widgets/custom_text.dart';
-import 'package:hackatron/widgets/loader_overlay.dart';
 import 'package:hackatron/widgets/logout.dart';
-import 'package:hackatron/widgets/post.dart';
 import 'package:hackatron/widgets/product.dart';
 import 'package:hackatron/widgets/profile_icon.dart';
-import 'package:hackatron/widgets/search_field.dart';
 
 class Wishlist extends StatefulWidget {
   const Wishlist({Key? key}) : super(key: key);
@@ -91,43 +83,55 @@ class _WishlistState extends State<Wishlist> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData && snapshot.data!.data() != null) {
                     Users userData = snapshot.data!.data() as Users;
-                    return GridView(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.6,
-                      ),
-                      children: userData.wishlist!.map((item) {
-                        return FutureBuilder(
-                            future: productsRef.doc(item).get(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<DocumentSnapshot> product) {
-                              if (product.connectionState ==
-                                  ConnectionState.done) {
-                                if (product.hasData &&
-                                    product.data!.data() != null) {
-                                  Products productData =
-                                      product.data!.data() as Products;
-                                  return Product(productData, item, () {
-                                    setState(() {});
-                                  });
+                    if (userData.wishlist!.isNotEmpty) {
+                      return GridView(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.6,
+                        ),
+                        children: userData.wishlist!.map((item) {
+                          return FutureBuilder(
+                              future: productsRef.doc(item).get(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DocumentSnapshot> product) {
+                                if (product.connectionState ==
+                                    ConnectionState.done) {
+                                  if (product.hasData &&
+                                      product.data!.data() != null) {
+                                    Products productData =
+                                        product.data!.data() as Products;
+                                    return Product(productData, item, () {
+                                      setState(() {});
+                                    });
+                                  } else {
+                                    return const Center();
+                                  }
                                 } else {
-                                  return const Center();
+                                  return const Center(
+                                    child: CustomText(
+                                      text: "",
+                                      textColor: Color(primaryFontColor),
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: "AbrilFatFace",
+                                    ),
+                                  );
                                 }
-                              } else {
-                                return const Center(
-                                  child: CustomText(
-                                    text: "",
-                                    textColor: Color(primaryFontColor),
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: "AbrilFatFace",
-                                  ),
-                                );
-                              }
-                            });
-                      }).toList(),
-                    );
+                              });
+                        }).toList(),
+                      );
+                    } else {
+                      return const Center(
+                        child: CustomText(
+                          text: "No Item Found..",
+                          textColor: Color(primaryFontColor),
+                          fontSize: 25,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: "AbrilFatFace",
+                        ),
+                      );
+                    }
                   } else {
                     return const Center(
                       child: CustomText(

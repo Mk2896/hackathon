@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackatron/firebase_options.dart';
-import 'package:hackatron/models/get_dummy_data.dart';
 import 'package:hackatron/screens/my_home_page.dart';
 import 'package:hackatron/screens/splash_screen.dart';
 import 'package:hackatron/widgets/loader_overlay.dart';
@@ -13,7 +12,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // GetDummyData().init();
   runApp(const MyApp());
 }
 
